@@ -28,10 +28,11 @@ app.use(express.json());
 app.use(express.static(join(__dirname, 'public')));
 
 // Application and Database Health Check
+
 app.get('/health', async (req, res) => {
   try {
     const db = await pool.getDatabase();
-    await db.get('SELECT 1');
+    await db.query('SELECT 1');
 
     res.status(200).json({
       status: 'UP',
@@ -40,7 +41,6 @@ app.get('/health', async (req, res) => {
       uptime: process.uptime(),
       timestamp: new Date().toISOString()
     });
-
   } catch (error) {
     console.error('Health check failed:', error.message);
 
@@ -53,6 +53,7 @@ app.get('/health', async (req, res) => {
     });
   }
 });
+
 
 app.get('/shutdown', (req, res) => {
   console.log('=== MANUAL SHUTDOWN TRIGGERED ===');
